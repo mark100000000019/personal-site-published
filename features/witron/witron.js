@@ -121,20 +121,10 @@
     log.scrollTop = log.scrollHeight;
   }
 
-  var reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
   if (!pallet || !inboundLorry || !outboundLorry || !log) return;
 
   inboundLorry.style.opacity = 1;
   outboundLorry.style.opacity = 1;
-
-  if (reducedMotion) {
-    renderScene(16);
-    EVENTS.forEach(appendLogLine);
-    return;
-  }
 
   var revealed = 0;
   var prevCyclePos = 0;

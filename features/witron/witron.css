@@ -74,27 +74,22 @@
 .witron-log p {
   margin: 0 0 0.3em;
   color: var(--color-fg-muted);
+  opacity: 0;
+  animation: witron-log-in 0.4s ease forwards;
 }
 
 .witron-log time {
   color: var(--color-fg);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .witron-log p {
+@keyframes witron-log-in {
+  from {
     opacity: 0;
-    animation: witron-log-in 0.4s ease forwards;
+    transform: translateY(-2px);
   }
-
-  @keyframes witron-log-in {
-    from {
-      opacity: 0;
-      transform: translateY(-2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
