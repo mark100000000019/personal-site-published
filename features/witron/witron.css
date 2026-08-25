@@ -1,0 +1,109 @@
+.witron-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0;
+}
+
+#witron-scene {
+  flex: 1 1 60%;
+  min-width: 0;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.floor {
+  stroke: var(--color-border);
+  stroke-width: 2;
+}
+
+.station rect {
+  fill: var(--color-bg);
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+}
+
+.station text {
+  fill: var(--color-fg-muted);
+  font-size: 9px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    sans-serif;
+  text-anchor: middle;
+}
+
+.rack #rack-bay-b14 {
+  fill: var(--color-bg-inset);
+  stroke: var(--color-link);
+  stroke-width: 2;
+}
+
+.lorry .lorry-body {
+  fill: var(--color-fg-muted);
+}
+
+.lorry .lorry-wheel {
+  fill: var(--color-fg);
+}
+
+.lorry {
+  opacity: 0;
+}
+
+#pallet {
+  fill: var(--color-link);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.witron-log {
+  flex: 1 1 40%;
+  min-width: 0;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.8em;
+  line-height: 1.7;
+  overflow-y: auto;
+  height: 220px;
+}
+
+.witron-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+}
+
+.witron-log time {
+  color: var(--color-fg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .witron-log p {
+    opacity: 0;
+    animation: witron-log-in 0.4s ease forwards;
+  }
+
+  @keyframes witron-log-in {
+    from {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .witron-widget {
+    flex-direction: column;
+  }
+
+  .witron-log {
+    height: 160px;
+  }
+}
