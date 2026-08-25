@@ -1,0 +1,46 @@
+/*
+ * Shared colour tokens for markharris.uk.
+ *
+ * Feature pages under static/features/<name>/ can link this file directly
+ * to get the same light/dark palette as the rest of the site (via CSS
+ * custom properties) without inheriting site.css's typography/layout
+ * rules, then layer their own bespoke styling on top.
+ *
+ * Theme resolution order (lowest to highest precedence):
+ *   1. Light values below (:root defaults)
+ *   2. prefers-color-scheme: dark, if the OS/browser requests it
+ *   3. [data-theme="dark"|"light"] on <html>, set by the manual toggle
+ *      (see /js/theme.js) and always wins over both of the above.
+ */
+
+:root {
+  --color-bg: #ffffff;
+  --color-bg-inset: #f6f8fa;
+  --color-fg: #1a1a1a;
+  --color-fg-muted: #656d76;
+  --color-border: #e2e2e2;
+  --color-link: #0969da;
+  --color-link-visited: #6639ba;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #0d1117;
+    --color-bg-inset: #161b22;
+    --color-fg: #e6edf3;
+    --color-fg-muted: #9198a1;
+    --color-border: #30363d;
+    --color-link: #58a6ff;
+    --color-link-visited: #a495e8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0d1117;
+  --color-bg-inset: #161b22;
+  --color-fg: #e6edf3;
+  --color-fg-muted: #9198a1;
+  --color-border: #30363d;
+  --color-link: #58a6ff;
+  --color-link-visited: #a495e8;
+}
