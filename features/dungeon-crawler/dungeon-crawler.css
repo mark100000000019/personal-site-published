@@ -1,0 +1,252 @@
+:root {
+  --dc-wall: #f6f8fa;
+  --dc-wall-stroke: #656d76;
+  --dc-door: #dbeafe;
+  --dc-door-stroke: #2563eb;
+  --dc-monster: #fee2e2;
+  --dc-monster-stroke: #b91c1c;
+  --dc-floor: #f0f2f5;
+  --dc-ceiling: #e8eaed;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --dc-wall: #161b22;
+    --dc-wall-stroke: #9198a1;
+    --dc-door: #1c2c42;
+    --dc-door-stroke: #58a6ff;
+    --dc-monster: #3a1e1e;
+    --dc-monster-stroke: #f87171;
+    --dc-floor: #10151c;
+    --dc-ceiling: #0b0f14;
+  }
+}
+
+:root[data-theme="dark"] {
+  --dc-wall: #161b22;
+  --dc-wall-stroke: #9198a1;
+  --dc-door: #1c2c42;
+  --dc-door-stroke: #58a6ff;
+  --dc-monster: #3a1e1e;
+  --dc-monster-stroke: #f87171;
+  --dc-floor: #10151c;
+  --dc-ceiling: #0b0f14;
+}
+
+.dc-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0 0.5em;
+}
+
+.dc-viewport-wrap {
+  position: relative;
+  flex: 1 1 60%;
+  min-width: 0;
+}
+
+#dc-viewport {
+  display: block;
+  width: 100%;
+  height: 260px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.dc-ceiling {
+  fill: var(--dc-ceiling);
+}
+
+.dc-floor {
+  fill: var(--dc-floor);
+}
+
+.dc-wall-plain,
+.dc-wall-door,
+.dc-wall-monster {
+  stroke-width: 1.5;
+}
+
+.dc-wall-plain {
+  fill: var(--dc-wall);
+  stroke: var(--dc-wall-stroke);
+}
+
+.dc-wall-door {
+  fill: var(--dc-door);
+  stroke: var(--dc-door-stroke);
+}
+
+.dc-wall-monster {
+  fill: var(--dc-monster);
+  stroke: var(--dc-monster-stroke);
+}
+
+.dc-mm-backdrop {
+  fill: var(--color-bg);
+  stroke: var(--color-border);
+  opacity: 0.9;
+}
+
+.dc-mm-wall {
+  fill: var(--dc-wall-stroke);
+  opacity: 0.5;
+}
+
+.dc-mm-floor {
+  fill: var(--dc-floor);
+}
+
+.dc-mm-player {
+  fill: var(--color-link);
+}
+
+.dc-controls {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: grid;
+  grid-template-columns: 2.2rem 2.2rem 2.2rem;
+  grid-template-rows: 2.2rem 2.2rem;
+  grid-template-areas:
+    ".    fwd  .   "
+    "left back right";
+  gap: 2px;
+}
+
+.dc-controls button {
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.dc-controls button:hover {
+  background: var(--color-bg-inset);
+}
+
+.dc-ctrl-forward {
+  grid-area: fwd;
+}
+
+.dc-ctrl-left {
+  grid-area: left;
+}
+
+.dc-ctrl-back {
+  grid-area: back;
+}
+
+.dc-ctrl-right {
+  grid-area: right;
+}
+
+.dc-encounter {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 0.75rem;
+  transform: translateX(-50%);
+  background: var(--color-bg);
+  border: 1px solid var(--dc-monster-stroke);
+  border-radius: 6px;
+  padding: 0.6em 0.9em;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dc-encounter.active {
+  display: block;
+}
+
+.dc-encounter p {
+  margin: 0 0 0.4em;
+  font-size: 0.85em;
+}
+
+.dc-encounter-hp {
+  color: var(--color-fg-muted);
+}
+
+.dc-encounter button {
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--dc-monster);
+  color: var(--color-fg);
+  border: 1px solid var(--dc-monster-stroke);
+  border-radius: 4px;
+  padding: 0.3em 0.8em;
+}
+
+.dc-side {
+  flex: 1 1 40%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dc-hud {
+  margin: 0 0 0.4em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+.dc-log {
+  flex: 1 1 auto;
+  height: 260px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.8em;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.dc-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+  opacity: 0;
+  animation: dc-log-in 0.3s ease forwards;
+}
+
+@keyframes dc-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dc-caption {
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+@media (max-width: 560px) {
+  .dc-widget {
+    flex-direction: column;
+  }
+
+  #dc-viewport {
+    height: 220px;
+  }
+
+  .dc-log {
+    height: 180px;
+  }
+}

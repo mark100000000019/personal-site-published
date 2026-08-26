@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dungeon crawler demo | Mark Harris</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="dungeon-crawler.css">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+  </header>
+  <main>
+    <h1>Dungeon crawler demo</h1>
+    <p>
+      A short grid-based first-person dungeon crawler, in the style of the
+      classic Dungeon Master / Eye of the Beholder games &mdash; built with
+      a coding agent as a "can we actually do this in plain HTML/CSS/JS"
+      experiment, not a career section. Movement is tile-by-tile, turning
+      is in 90&deg; steps, and the view is redrawn from a small lookup
+      table of wall segments rather than any real 3D &mdash; the same
+      trick those original games used.
+    </p>
+    <p>
+      Find the lever, then the goblin blocking the way to the treasure.
+      Controls: arrow keys / WASD, or the buttons below.
+    </p>
+
+    <div class="dc-widget">
+      <div class="dc-viewport-wrap">
+        <svg id="dc-viewport" viewBox="0 0 400 240" role="img" aria-label="First-person dungeon view">
+          <g id="dc-scene"></g>
+          <g id="dc-minimap"></g>
+        </svg>
+
+        <div id="dc-encounter" class="dc-encounter">
+          <p>A goblin blocks the passage.</p>
+          <p class="dc-encounter-hp">Goblin HP: <span id="dc-enemy-hp">3</span>/3</p>
+          <button id="dc-attack-btn" type="button">Attack</button>
+        </div>
+
+        <div class="dc-controls" aria-label="Movement controls">
+          <button id="dc-btn-forward" class="dc-ctrl-forward" type="button" aria-label="Forward">&uarr;</button>
+          <button id="dc-btn-left" class="dc-ctrl-left" type="button" aria-label="Turn left">&#8630;</button>
+          <button id="dc-btn-back" class="dc-ctrl-back" type="button" aria-label="Back">&darr;</button>
+          <button id="dc-btn-right" class="dc-ctrl-right" type="button" aria-label="Turn right">&#8631;</button>
+        </div>
+      </div>
+
+      <div class="dc-side">
+        <p class="dc-hud">HP: <span id="dc-hp">3</span>/3</p>
+        <div id="dc-log" class="dc-log"></div>
+      </div>
+    </div>
+
+    <p class="dc-caption">
+      Wireframe first-person view built from a lookup table of wall
+      segments, not true 3D &mdash; the same shortcut the originals used.
+    </p>
+
+    <noscript>
+      <p>This demo needs JavaScript to run &mdash; it's an interactive
+      grid dungeon, not something that renders meaningfully as static
+      text.</p>
+    </noscript>
+  </main>
+  <footer>
+    <p>&copy; 2026</p>
+  </footer>
+  <script src="/js/theme.js" defer></script>
+  <script src="dungeon-crawler.js" defer></script>
+</body>
+</html>
