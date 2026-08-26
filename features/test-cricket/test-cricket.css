@@ -1,0 +1,231 @@
+:root {
+  --tc-area: #dbeafe;
+  --tc-line: #2563eb;
+  --tc-home: #2563eb;
+  --tc-away: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --tc-area: #1c2c42;
+    --tc-line: #58a6ff;
+    --tc-home: #58a6ff;
+    --tc-away: #e3b341;
+  }
+}
+
+:root[data-theme="dark"] {
+  --tc-area: #1c2c42;
+  --tc-line: #58a6ff;
+  --tc-home: #58a6ff;
+  --tc-away: #e3b341;
+}
+
+.tc-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0 0.5em;
+}
+
+.tc-chart-col {
+  flex: 1 1 58%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#tc-chart {
+  width: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.tc-baseline {
+  stroke: var(--color-border);
+  stroke-width: 1;
+  stroke-dasharray: 3, 3;
+}
+
+.tc-baseline-label {
+  fill: var(--color-fg-muted);
+  font-size: 8px;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+}
+
+.tc-day-marker line {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.tc-day-marker text {
+  fill: var(--color-fg-muted);
+  font-size: 9px;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  text-anchor: middle;
+}
+
+.tc-area {
+  fill: var(--tc-area);
+  stroke: none;
+}
+
+.tc-line {
+  fill: none;
+  stroke: var(--tc-line);
+  stroke-width: 1.5;
+}
+
+.tc-playhead {
+  stroke: var(--color-link);
+  stroke-width: 1.5;
+}
+
+.tc-strip {
+  display: flex;
+  gap: 2px;
+  margin-top: 0.5em;
+}
+
+.tc-strip-cell {
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--color-border);
+  opacity: 0.4;
+  transition: opacity 0.3s ease, outline-color 0.3s ease;
+}
+
+.tc-strip-cell.home {
+  background: var(--tc-home);
+}
+
+.tc-strip-cell.away {
+  background: var(--tc-away);
+}
+
+.tc-strip-cell.done {
+  opacity: 0.55;
+}
+
+.tc-strip-cell.active {
+  opacity: 1;
+  outline: 2px solid var(--color-fg);
+  outline-offset: 1px;
+}
+
+.tc-strip-caption {
+  margin: 0.4em 0 0;
+  font-size: 0.75em;
+  color: var(--color-fg-muted);
+}
+
+.tc-info-col {
+  flex: 1 1 42%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tc-status {
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.6em 0.75em;
+  font-size: 0.85em;
+}
+
+.tc-status .tc-status-line {
+  margin: 0 0 0.25em;
+  color: var(--color-fg-muted);
+}
+
+.tc-status .tc-status-line:last-child {
+  margin-bottom: 0;
+}
+
+.tc-status strong {
+  color: var(--color-fg);
+}
+
+.tc-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 180px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.78em;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.tc-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+}
+
+.tc-log p.new {
+  opacity: 0;
+  animation: tc-log-in 0.4s ease forwards;
+}
+
+.tc-log p:last-child {
+  color: var(--color-fg);
+}
+
+@keyframes tc-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tc-scrubber-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 0.75em 0;
+}
+
+.tc-scrubber {
+  flex: 1 1 auto;
+  accent-color: var(--color-link);
+}
+
+.tc-scrubber-label {
+  flex: 0 0 auto;
+  min-width: 9em;
+  font-size: 0.8em;
+  color: var(--color-fg-muted);
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+}
+
+.tc-caption {
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+@media (max-width: 560px) {
+  .tc-widget {
+    flex-direction: column;
+  }
+
+  .tc-log {
+    height: 160px;
+  }
+}

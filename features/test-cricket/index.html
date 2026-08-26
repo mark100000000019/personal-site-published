@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test cricket | Mark Harris</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="test-cricket.css">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+  </header>
+  <main>
+    <h1>Test cricket</h1>
+    <p>
+      Test cricket gets written off as boring by people who've only ever
+      seen the highlights &mdash; five days, no fixed number of overs,
+      long stretches where nothing looks like it's happening. But the
+      scoreboard is the least interesting part of it. Underneath a session
+      that looks stationary &mdash; same total, same batters, nobody
+      out &mdash; the balance of the game is usually moving: a bowler
+      settling into a spell, a batter starting to middle it, a
+      declaration being quietly set up three sessions in advance.
+    </p>
+    <p>
+      The widget below plays out a single Test match &mdash; illustrative,
+      not a real one &mdash; session by session, with a running
+      &ldquo;momentum&rdquo; line alongside the bare scorecard, so you can
+      see the game swinging even when the total on the board barely
+      changes. Drag the slider to jump around, or just let it play.
+    </p>
+
+    <div class="tc-widget" aria-hidden="true">
+      <div class="tc-chart-col">
+        <svg id="tc-chart" viewBox="0 0 400 200" role="presentation">
+          <defs>
+            <clipPath id="tc-reveal-clip">
+              <rect id="tc-reveal-rect" x="0" y="0" width="0" height="200" />
+            </clipPath>
+          </defs>
+
+          <line class="tc-baseline" x1="20" y1="95" x2="380" y2="95" />
+          <text class="tc-baseline-label" x="24" y="91">even</text>
+
+          <g id="tc-day-markers"></g>
+
+          <g clip-path="url(#tc-reveal-clip)">
+            <path id="tc-area" class="tc-area" d="" />
+            <path id="tc-line" class="tc-line" d="" />
+          </g>
+
+          <line id="tc-playhead" class="tc-playhead" x1="20" y1="14" x2="20" y2="178" />
+        </svg>
+        <div id="tc-strip" class="tc-strip"></div>
+        <p class="tc-strip-caption">who's batting &mdash; home / away</p>
+      </div>
+
+      <div class="tc-info-col">
+        <div id="tc-status" class="tc-status"></div>
+        <div id="tc-log" class="tc-log"></div>
+      </div>
+    </div>
+
+    <div class="tc-scrubber-row" aria-hidden="true">
+      <input type="range" id="tc-scrubber" class="tc-scrubber" min="0" max="14" step="1" value="0" aria-label="Session">
+      <span id="tc-scrubber-label" class="tc-scrubber-label">Day 1, Morning</span>
+    </div>
+
+    <p class="tc-caption">
+      An illustrative Test match &mdash; the shape of a five-day game (and
+      the swings within it), not a real scorecard.
+    </p>
+
+    <noscript>
+      <ol>
+        <li>Day 1, Morning: Home 45&ndash;1 &mdash; openers settle in cautiously.</li>
+        <li>Day 1, Afternoon: Home 130&ndash;2 &mdash; a composed partnership takes control.</li>
+        <li>Day 1, Evening: Home 210&ndash;3 &mdash; a late flurry of boundaries before the close.</li>
+        <li>Day 2, Morning: Home 240&ndash;5 &mdash; two quick wickets let Away claw back control.</li>
+        <li>Day 2, Afternoon: Home all out 340 &mdash; a below-par finish given the platform.</li>
+        <li>Day 2, Evening: Away 60&ndash;1 &mdash; the openers see out a testing evening session.</li>
+        <li>Day 3, Morning: Away 140&ndash;2 &mdash; a fluent counter-attack shrinks the deficit fast.</li>
+        <li>Day 3, Afternoon: Away 220&ndash;4 &mdash; two wickets fall but the total keeps climbing.</li>
+        <li>Day 3, Evening: Away all out 300 &mdash; Home lead by 40 runs on first innings.</li>
+        <li>Day 4, Morning: Home (2nd innings) 50&ndash;2 &mdash; the lead is extended cautiously.</li>
+        <li>Day 4, Afternoon: Home 140&ndash;5 &mdash; a clatter of wickets threatens the advantage.</li>
+        <li>Day 4, Evening: Home declare 220&ndash;8 &mdash; Away need 260 to win.</li>
+        <li>Day 5, Morning: Away 80&ndash;2 &mdash; two early wickets put Home back in control.</li>
+        <li>Day 5, Afternoon: Away 180&ndash;6 &mdash; every wicket and boundary now matters.</li>
+        <li>Day 5, Evening: Away all out 254 &mdash; Home win by 5 runs.</li>
+      </ol>
+    </noscript>
+  </main>
+  <footer>
+    <p>&copy; 2026</p>
+  </footer>
+  <script src="/js/theme.js" defer></script>
+  <script src="test-cricket.js" defer></script>
+</body>
+</html>

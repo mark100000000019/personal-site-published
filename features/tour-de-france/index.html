@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour de France | Mark Harris</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="tour-de-france.css">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+  </header>
+  <main>
+    <h1>Tour de France</h1>
+    <p>
+      The Tour de France gets the same complaint as Test cricket: three
+      weeks, and most days end with the same peloton crossing the line
+      together looking like nothing happened. But a Grand Tour is really
+      three or four different competitions running at once inside the
+      same race &mdash; sprinters fighting for stage wins that barely
+      touch the overall standings, a handful of general-classification
+      riders quietly managing gaps of a few seconds through weeks of
+      stages that don't matter to them at all, until a mountain stage or
+      a time trial reshuffles everything in one afternoon.
+    </p>
+    <p>
+      The widget below steps through a single 21-stage race &mdash;
+      illustrative, not a real Tour &mdash; tracking the gap between the
+      overall leader and the closest rival stage by stage, with each
+      stage's terrain marked along the way. Drag the slider to jump
+      around, or just let it play.
+    </p>
+
+    <div class="tdf-widget" aria-hidden="true">
+      <div class="tdf-chart-col">
+        <svg id="tdf-chart" viewBox="0 0 400 200" role="presentation">
+          <defs>
+            <clipPath id="tdf-reveal-clip">
+              <rect id="tdf-reveal-rect" x="0" y="0" width="0" height="200" />
+            </clipPath>
+          </defs>
+
+          <line class="tdf-baseline" x1="20" y1="127" x2="380" y2="127" />
+          <text class="tdf-baseline-label" x="24" y="123">tied</text>
+
+          <g id="tdf-week-markers"></g>
+
+          <g clip-path="url(#tdf-reveal-clip)">
+            <path id="tdf-area" class="tdf-area" d="" />
+            <path id="tdf-line" class="tdf-line" d="" />
+          </g>
+
+          <line id="tdf-playhead" class="tdf-playhead" x1="20" y1="14" x2="20" y2="178" />
+        </svg>
+        <div id="tdf-strip" class="tdf-strip"></div>
+        <p class="tdf-strip-legend">
+          <span class="tdf-swatch flat"></span>flat/sprint
+          <span class="tdf-swatch hilly"></span>hilly
+          <span class="tdf-swatch mountain"></span>mountain
+          <span class="tdf-swatch itt"></span>time trial
+        </p>
+      </div>
+
+      <div class="tdf-info-col">
+        <div id="tdf-status" class="tdf-status"></div>
+        <div id="tdf-log" class="tdf-log"></div>
+      </div>
+    </div>
+
+    <div class="tdf-scrubber-row" aria-hidden="true">
+      <input type="range" id="tdf-scrubber" class="tdf-scrubber" min="0" max="20" step="1" value="0" aria-label="Stage">
+      <span id="tdf-scrubber-label" class="tdf-scrubber-label">Stage 1</span>
+    </div>
+
+    <p class="tdf-caption">
+      An illustrative three-week race &mdash; the shape of a Grand Tour
+      and the terrain behind each swing in the gap, not a real Tour de
+      France.
+    </p>
+
+    <noscript>
+      <ol>
+        <li>Stage 1 (Flat): gap +0:04 &mdash; a bunch sprint decides the opener.</li>
+        <li>Stage 5 (Mountain): gap +1:25 &mdash; the high mountains blow the gap wide open.</li>
+        <li>Stage 9 (Time trial): gap &minus;0:35 &mdash; a specialist flips the race lead in one afternoon.</li>
+        <li>Stage 12 (Mountain): gap +0:25 &mdash; a dominant summit finish swings the lead back.</li>
+        <li>Stage 13 (Mountain): gap +1:35 &mdash; the queen stage balloons the gap past a minute and a half.</li>
+        <li>Stage 19 (Mountain): gap +2:10 &mdash; the final mountain stage puts the result beyond doubt.</li>
+        <li>Stage 21 (Flat): gap +2:20 (final) &mdash; the ceremonial ride into Paris.</li>
+      </ol>
+    </noscript>
+  </main>
+  <footer>
+    <p>&copy; 2026</p>
+  </footer>
+  <script src="/js/theme.js" defer></script>
+  <script src="tour-de-france.js" defer></script>
+</body>
+</html>
