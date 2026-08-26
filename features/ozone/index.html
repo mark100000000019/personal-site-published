@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ozone layer &amp; the Montreal Protocol | Mark Harris</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="ozone.css">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+  </header>
+  <main>
+    <h1>Ozone layer &amp; the Montreal Protocol</h1>
+    <p>
+      My third-year undergraduate project (on a straight chemistry BSc this
+      would have been the final-year project) covered the chemistry of the
+      ozone layer and the effect of the Montreal Protocol on the Antarctic
+      ozone hole. It followed on from a bonus GCSE in geology I picked up
+      along the way, and a few geology units taken during the degree &mdash;
+      a small return to earth science after giving up geography at school
+      in favour of maths, physics and chemistry A-levels. I remember this
+      project less well than the NMR one, but the chemistry has stuck.
+    </p>
+    <p>
+      (A professor once told me my first draft &ldquo;would have made an
+      excellent <em>New Scientist</em> article&rdquo; &mdash; meant as
+      criticism, too readable and not rigorous enough for an academic
+      report. Eighteen-year-old me took it as a compliment.)
+    </p>
+    <p>
+      CFCs are stable enough to survive intact all the way to the
+      stratosphere, where UV radiation finally breaks a C&ndash;Cl bond and
+      releases a chlorine radical. That one atom then runs a catalytic
+      cycle: Cl&bull; strips an oxygen from ozone (Cl + O&#8323; &rarr; ClO
+      + O&#8322;), and a free oxygen atom strips it back off again (ClO + O
+      &rarr; Cl + O&#8322;) &mdash; regenerating the original chlorine atom
+      so it can do it again. A single chlorine atom can destroy tens of
+      thousands of ozone molecules before it's eventually removed from the
+      stratosphere: a reusable weapon, not a one-shot reaction. The cycle
+      below runs on a loop while a running total counts the toll from one
+      atom.
+    </p>
+
+    <div class="oz-molecular" aria-hidden="true">
+      <svg id="oz-cycle" viewBox="0 0 500 100" role="presentation">
+        <defs>
+          <marker id="oz-arrow" viewBox="0 0 8 8" refX="4" refY="4"
+                  markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M0,0 L8,4 L0,8 z" class="oz-arrowhead" />
+          </marker>
+        </defs>
+
+        <line class="oz-cycle-edge" x1="130" y1="50" x2="140" y2="50" marker-end="url(#oz-arrow)" />
+        <line class="oz-cycle-edge" x1="250" y1="50" x2="260" y2="50" marker-end="url(#oz-arrow)" />
+        <line class="oz-cycle-edge" x1="370" y1="50" x2="380" y2="50" marker-end="url(#oz-arrow)" />
+        <path class="oz-cycle-edge oz-cycle-return" d="M435,67 C435,92 75,92 75,67" marker-end="url(#oz-arrow)" />
+
+        <g id="oz-node-0" class="oz-node">
+          <rect x="20" y="33" width="110" height="34" rx="5" />
+          <text x="75" y="55">Cl&bull; + O&#8323;</text>
+        </g>
+        <g id="oz-node-1" class="oz-node">
+          <rect x="140" y="33" width="110" height="34" rx="5" />
+          <text x="195" y="55">&rarr; ClO + O&#8322;</text>
+        </g>
+        <g id="oz-node-2" class="oz-node">
+          <rect x="260" y="33" width="110" height="34" rx="5" />
+          <text x="315" y="55">ClO + O&bull; (UV)</text>
+        </g>
+        <g id="oz-node-3" class="oz-node">
+          <rect x="380" y="33" width="110" height="34" rx="5" />
+          <text x="435" y="55">&rarr; Cl&bull; + O&#8322;</text>
+        </g>
+      </svg>
+      <p class="oz-counter">
+        Ozone molecules destroyed by this one Cl&bull; atom (running total):
+        <span id="oz-counter">0</span>
+        &mdash; ticks up once per lap; the real figure, over a stratospheric
+        lifetime of a year or two, is in the tens of thousands.
+      </p>
+    </div>
+
+    <p>
+      Why the hole forms specifically over Antarctica: the winter polar
+      vortex isolates the air over the pole, and the extreme cold that
+      builds up inside it forms polar stratospheric clouds. Reactions on
+      the surface of those ice crystals convert otherwise-inert chlorine
+      reservoir compounds into active, ozone-destroying forms, and when
+      spring sunlight finally arrives it triggers rapid, localised
+      destruction &mdash; until the vortex breaks down later in the season
+      and lets the hole refill for the year. The chart below sweeps through
+      the decades that followed the hole's discovery, and &mdash; genuinely,
+      for once &mdash; policy working.
+    </p>
+
+    <div class="ozone-widget" aria-hidden="true">
+      <svg id="ozone-chart" viewBox="0 0 400 200" role="presentation">
+        <defs>
+          <clipPath id="oz-reveal-clip">
+            <rect id="oz-reveal-rect" x="0" y="0" width="0" height="200" />
+          </clipPath>
+        </defs>
+
+        <line class="oz-axis" x1="20" y1="170" x2="380" y2="170" />
+
+        <g clip-path="url(#oz-reveal-clip)">
+          <path class="oz-area"
+                d="M20,167 L60,155 L100,110 L140,72.5 L188,42.5 L220,27.5 L268,20 L300,35 L348,53 L380,68 L380,170 L20,170 Z" />
+          <path class="oz-line"
+                d="M20,167 L60,155 L100,110 L140,72.5 L188,42.5 L220,27.5 L268,20 L300,35 L348,53 L380,68" />
+        </g>
+
+        <line id="oz-playhead" class="oz-playhead" x1="20" y1="12" x2="20" y2="178" />
+
+        <g id="oz-marker-1985" class="oz-marker">
+          <line x1="100" y1="15" x2="100" y2="170" />
+          <text x="100" y="180">&rsquo;85</text>
+        </g>
+        <g id="oz-marker-1987" class="oz-marker">
+          <line x1="116" y1="15" x2="116" y2="170" />
+          <text x="116" y="188">&rsquo;87</text>
+        </g>
+        <g id="oz-marker-1989" class="oz-marker">
+          <line x1="132" y1="15" x2="132" y2="170" />
+          <text x="132" y="196">&rsquo;89</text>
+        </g>
+        <g id="oz-marker-1996" class="oz-marker">
+          <line x1="188" y1="15" x2="188" y2="170" />
+          <text x="188" y="180">&rsquo;96</text>
+        </g>
+        <g id="oz-marker-2016" class="oz-marker">
+          <line x1="348" y1="15" x2="348" y2="170" />
+          <text x="348" y="180">&rsquo;16</text>
+        </g>
+      </svg>
+
+      <div id="ozone-log" class="ozone-log"></div>
+    </div>
+    <p class="ozone-caption">
+      Schematic hole-area shape, not a precise dataset &mdash; but the
+      trend (sharp growth through the 80s&ndash;90s, a plateau, then slow
+      narrowing) and the milestone years are real.
+    </p>
+
+    <noscript>
+      <ol>
+        <li>Cl&bull; + O&#8323; &rarr; ClO + O&#8322;, then ClO + O &rarr;
+          Cl&bull; + O&#8322; &mdash; the chlorine atom regenerates and
+          repeats, destroying tens of thousands of ozone molecules over its
+          stratospheric lifetime.</li>
+        <li>1975&ndash;2020: schematic ozone hole area over time.</li>
+        <li>1985 &mdash; ozone hole discovered (Farman, Gardiner &amp; Shanklin)</li>
+        <li>1987 &mdash; Montreal Protocol signed</li>
+        <li>1989 &mdash; Protocol enters into force</li>
+        <li>1996 &mdash; CFC production phased out in developed nations</li>
+        <li>2016 &mdash; first confirmed signs of recovery</li>
+        <li>Full recovery projected around the 2060s.</li>
+      </ol>
+    </noscript>
+  </main>
+  <footer>
+    <p>&copy; 2026</p>
+  </footer>
+  <script src="/js/theme.js" defer></script>
+  <script src="ozone.js" defer></script>
+</body>
+</html>

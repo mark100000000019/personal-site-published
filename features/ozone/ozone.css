@@ -1,0 +1,195 @@
+:root {
+  --oz-area: #dbeafe;
+  --oz-line: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --oz-area: #1c2c42;
+    --oz-line: #58a6ff;
+  }
+}
+
+:root[data-theme="dark"] {
+  --oz-area: #1c2c42;
+  --oz-line: #58a6ff;
+}
+
+.oz-molecular {
+  margin: 1.5em 0 0.5em;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.5em 0.75em 0.75em;
+}
+
+#oz-cycle {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.oz-cycle-edge {
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.oz-arrowhead {
+  fill: var(--color-border);
+}
+
+.oz-node rect {
+  fill: var(--color-bg);
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, fill 0.3s ease, stroke-width 0.3s ease;
+}
+
+.oz-node text {
+  fill: var(--color-fg-muted);
+  font-size: 11px;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  text-anchor: middle;
+  transition: fill 0.3s ease;
+}
+
+.oz-node.active rect {
+  stroke: var(--color-link);
+  stroke-width: 2;
+  fill: var(--color-bg-inset);
+}
+
+.oz-node.active text {
+  fill: var(--color-fg);
+}
+
+.oz-counter {
+  margin: 0.6em 0 0;
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+#oz-counter {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  color: var(--color-fg);
+}
+
+.ozone-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0 0.5em;
+}
+
+#ozone-chart {
+  flex: 1 1 60%;
+  min-width: 0;
+  height: 220px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.oz-axis {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.oz-area {
+  fill: var(--oz-area);
+  stroke: none;
+}
+
+.oz-line {
+  fill: none;
+  stroke: var(--oz-line);
+  stroke-width: 1.5;
+}
+
+.oz-playhead {
+  stroke: var(--color-link);
+  stroke-width: 1.5;
+}
+
+.oz-marker {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.oz-marker.revealed {
+  opacity: 1;
+}
+
+.oz-marker line {
+  stroke: var(--color-fg-muted);
+  stroke-width: 1;
+  stroke-dasharray: 2, 2;
+}
+
+.oz-marker text {
+  fill: var(--color-fg-muted);
+  font-size: 9px;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  text-anchor: middle;
+}
+
+.ozone-log {
+  flex: 1 1 40%;
+  min-width: 0;
+  height: 220px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.8em;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.ozone-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+  opacity: 0;
+  animation: ozone-log-in 0.4s ease forwards;
+}
+
+@keyframes ozone-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ozone-caption {
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+@media (max-width: 560px) {
+  .ozone-widget {
+    flex-direction: column;
+  }
+
+  #ozone-chart,
+  .ozone-log {
+    height: auto;
+  }
+
+  #ozone-chart {
+    height: 200px;
+  }
+
+  .ozone-log {
+    height: 160px;
+  }
+}
