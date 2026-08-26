@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NMR spectrometer temperature drift | Mark Harris</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="nmr.css">
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </nav>
+  </header>
+  <main>
+    <h1>NMR spectrometer temperature drift</h1>
+    <p>
+      My final-year MChem project at the University of Manchester, supervised
+      by Prof. Gareth Morris and working with Paul Bowyer, programmed a
+      Varian NMR spectrometer to investigate a subtle source of error: the
+      building's air-conditioning cycled on and off every few minutes,
+      nudging the probe temperature up and down, which in turn shifted the
+      phase and frequency of the NMR signal. Because the aircon cycle is
+      <em>periodic</em> rather than random, that drift doesn't average out
+      like ordinary noise &mdash; in a 2D spectrum it shows up as a coherent
+      artefact, a faint diagonal running parallel to a real peak. The fix
+      was simple once identified: randomise the order in which the
+      experiment's increments are acquired, so the drift no longer lines up
+      with anything. The diagram below runs the same 24-increment
+      experiment twice &mdash; once acquired in order, once shuffled &mdash;
+      against the same underlying temperature drift.
+    </p>
+    <p>
+      (Real published paper from this work: Bowyer, P.J., Swanson, A.G.,
+      Morris, G.A. &ldquo;Analyzing and Correcting Spectrometer Temperature
+      Sensitivity.&rdquo; <em>Journal of Magnetic Resonance</em>, 152(2),
+      234&ndash;246 (2001). It's paywalled, so this section is built from the
+      abstract and general NMR knowledge rather than the full methods. Prof.
+      Morris had a memorably sharp eye for detail &mdash; he once stopped a
+      tutorial to correct a slide that used &ldquo;data&rdquo; as a singular
+      noun.)
+    </p>
+
+    <div class="nmr-widget" aria-hidden="true">
+      <svg id="nmr-diagram" viewBox="0 0 400 140" role="presentation">
+        <text class="nmr-label" x="10" y="16">Sequential acquisition</text>
+        <g id="nmr-seq-strip"></g>
+        <rect class="nmr-spectrum-bg" x="350" y="10" width="40" height="40" rx="4" />
+        <circle class="nmr-peak" cx="370" cy="30" r="4" />
+        <g id="nmr-seq-ghost" class="nmr-ghost">
+          <circle cx="361" cy="21" r="2.5" />
+          <circle cx="379" cy="39" r="2.5" />
+        </g>
+
+        <text class="nmr-label" x="10" y="96">Randomised acquisition</text>
+        <g id="nmr-rand-strip"></g>
+        <rect class="nmr-spectrum-bg" x="350" y="90" width="40" height="40" rx="4" />
+        <circle class="nmr-peak" cx="370" cy="110" r="4" />
+        <g id="nmr-rand-noise" class="nmr-noise">
+          <circle cx="356" cy="96" r="1.1" fill-opacity="0.5" />
+          <circle cx="384" cy="99" r="1" fill-opacity="0.3" />
+          <circle cx="360" cy="112" r="1.2" fill-opacity="0.4" />
+          <circle cx="373" cy="94" r="0.9" fill-opacity="0.35" />
+          <circle cx="388" cy="118" r="1" fill-opacity="0.3" />
+          <circle cx="355" cy="122" r="1.1" fill-opacity="0.4" />
+          <circle cx="381" cy="124" r="0.9" fill-opacity="0.3" />
+          <circle cx="365" cy="119" r="1" fill-opacity="0.45" />
+          <circle cx="377" cy="106" r="0.8" fill-opacity="0.3" />
+          <circle cx="358" cy="104" r="1" fill-opacity="0.35" />
+        </g>
+      </svg>
+
+      <div id="nmr-log" class="nmr-log"></div>
+    </div>
+    <p class="nmr-caption">
+      Each cell is one t1 increment, coloured by how far the probe
+      temperature had drifted at the moment it was measured (blue = cooler,
+      red = warmer). Acquired in order, the drift traces a smooth ripple
+      that survives into the spectrum as a ghost peak. Shuffled, the same
+      24 temperature readings land in a different order and read as noise.
+    </p>
+
+    <noscript>
+      <ol>
+        <li>Aircon cycling — probe temperature drifting ±0.3°C every ~4 min</li>
+        <li>Sequential run starts — 24 t1 increments acquired back-to-back</li>
+        <li>Sequential 2D FT — drift is now a smooth function of increment number</li>
+        <li>Result: a coherent artefact — a faint diagonal beside the real peak</li>
+        <li>Randomised run starts — same 24 increments, acquisition order shuffled</li>
+        <li>Randomised 2D FT — drift no longer correlates with increment number</li>
+        <li>Result: drift spreads into the noise floor — the real peak stands clean</li>
+        <li>Same physical drift, different acquisition order, different outcome</li>
+      </ol>
+    </noscript>
+  </main>
+  <footer>
+    <p>&copy; 2026</p>
+  </footer>
+  <script src="/js/theme.js" defer></script>
+  <script src="nmr.js" defer></script>
+</body>
+</html>
