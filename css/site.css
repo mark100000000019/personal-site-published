@@ -29,26 +29,58 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: 1em;
+  font-weight: 700;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
 }
 
 h1 {
-  font-size: 2em;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--color-border);
+  color: var(--color-heading-1);
 }
 
 h2 {
-  font-size: 1.5em;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--color-border);
+  color: var(--color-heading-2);
 }
 
 h3 {
-  font-size: 1.25em;
+  color: var(--color-heading-3);
+}
+
+h4 {
+  color: var(--color-heading-4);
+}
+
+h5 {
+  color: var(--color-heading-5);
+}
+
+h6 {
+  color: var(--color-heading-6);
+}
+
+h1::before {
+  content: "# ";
+}
+
+h2::before {
+  content: "## ";
+}
+
+h3::before {
+  content: "### ";
+}
+
+h4::before {
+  content: "#### ";
+}
+
+h5::before {
+  content: "##### ";
+}
+
+h6::before {
+  content: "###### ";
 }
 
 p,

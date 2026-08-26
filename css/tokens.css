@@ -21,6 +21,12 @@
   --color-border: #e2e2e2;
   --color-link: #0969da;
   --color-link-visited: #6639ba;
+  --color-heading-1: #172554;
+  --color-heading-2: #1e3a8a;
+  --color-heading-3: #1e40af;
+  --color-heading-4: #1d4ed8;
+  --color-heading-5: #2563eb;
+  --color-heading-6: #3b82f6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,6 +38,12 @@
     --color-border: #30363d;
     --color-link: #58a6ff;
     --color-link-visited: #a495e8;
+    --color-heading-1: #bfdbfe;
+    --color-heading-2: #93c5fd;
+    --color-heading-3: #60a5fa;
+    --color-heading-4: #3b82f6;
+    --color-heading-5: #2f6fd6;
+    --color-heading-6: #2563eb;
   }
 }
 
@@ -43,4 +55,10 @@
   --color-border: #30363d;
   --color-link: #58a6ff;
   --color-link-visited: #a495e8;
+  --color-heading-1: #bfdbfe;
+  --color-heading-2: #93c5fd;
+  --color-heading-3: #60a5fa;
+  --color-heading-4: #3b82f6;
+  --color-heading-5: #2f6fd6;
+  --color-heading-6: #2563eb;
 }

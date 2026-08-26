@@ -1,0 +1,210 @@
+:root {
+  --mo-fail: #cf222e;
+  --mo-pass: #1a7f37;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mo-fail: #f85149;
+    --mo-pass: #3fb950;
+  }
+}
+
+:root[data-theme="dark"] {
+  --mo-fail: #f85149;
+  --mo-pass: #3fb950;
+}
+
+.metoffice-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0;
+}
+
+#mo-tree {
+  flex: 1 1 42%;
+  min-width: 0;
+  height: 340px;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.mo-edge {
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+}
+
+.mo-arrowhead {
+  fill: var(--color-border);
+}
+
+.mo-node rect {
+  fill: var(--color-bg);
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, fill 0.3s ease, stroke-width 0.3s ease;
+}
+
+.mo-node text {
+  fill: var(--color-fg-muted);
+  font-size: 10.5px;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  text-anchor: middle;
+  transition: fill 0.3s ease;
+}
+
+.mo-node.mo-trim rect {
+  stroke-dasharray: 3, 3;
+}
+
+.mo-node.pending {
+  opacity: 0.35;
+}
+
+.mo-node.active rect {
+  stroke: var(--color-link);
+  stroke-width: 2;
+  fill: var(--color-bg-inset);
+}
+
+.mo-node.active text {
+  fill: var(--color-fg);
+}
+
+.mo-node.done {
+  opacity: 0.6;
+}
+
+.mo-node.mo-check.fail rect {
+  stroke: var(--mo-fail);
+}
+
+.mo-node.mo-check.fail text {
+  fill: var(--mo-fail);
+}
+
+.mo-node.mo-check.pass rect {
+  stroke: var(--mo-pass);
+}
+
+.mo-node.mo-check.pass text {
+  fill: var(--mo-pass);
+}
+
+.mo-side {
+  flex: 1 1 58%;
+  min-width: 0;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+
+.mo-draft {
+  flex: 0 0 auto;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+}
+
+.mo-draft-text {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.8em;
+  line-height: 1.5;
+  min-height: 3.6em;
+  color: var(--color-fg);
+}
+
+.mo-budget {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 0.6em;
+}
+
+.mo-budget-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mo-budget-fill {
+  height: 100%;
+  width: 0;
+  background: var(--color-link);
+  transition: width 0.5s ease, background-color 0.3s ease;
+}
+
+.mo-budget-fill.over {
+  background: var(--mo-fail);
+}
+
+.mo-budget-fill.sent {
+  background: var(--mo-pass);
+}
+
+.mo-budget-count {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.75em;
+  color: var(--color-fg-muted);
+  white-space: nowrap;
+}
+
+.mo-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.75em;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+  font-size: 0.8em;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.mo-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+  opacity: 0;
+  animation: mo-log-in 0.4s ease forwards;
+}
+
+@keyframes mo-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 560px) {
+  .metoffice-widget {
+    flex-direction: column;
+  }
+
+  #mo-tree,
+  .mo-side {
+    height: auto;
+  }
+
+  #mo-tree {
+    height: 320px;
+  }
+
+  .mo-log {
+    height: 160px;
+  }
+}
