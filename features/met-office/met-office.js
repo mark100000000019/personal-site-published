@@ -144,7 +144,7 @@
   updateNodes(0);
   resetChecks();
 
-  Feature.loop(CYCLE, {
+  var loop = Feature.loop(CYCLE, {
     onReset: function () {
       events.reset();
       setDraft("", 0, false);
@@ -155,4 +155,6 @@
       events.advance(t);
     },
   });
+
+  Feature.playPause(loop, [document.querySelector(".feature-widget")]);
 })();

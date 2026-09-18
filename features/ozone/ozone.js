@@ -87,7 +87,7 @@
   resetSlow();
   updateNodes(0);
 
-  Feature.loop(SLOW_CYCLE, {
+  var loop = Feature.loop(SLOW_CYCLE, {
     onReset: resetSlow,
     onFrame: function (slowPos, elapsed) {
       events.advance(slowPos);
@@ -108,4 +108,11 @@
       updateNodes(Math.floor(fastPos / 2) % 4);
     },
   });
+
+  // One button under the catalytic cycle pauses both clocks; the loop
+  // stays running while either the cycle or the chart is on screen.
+  Feature.playPause(loop, [
+    document.querySelector(".oz-molecular"),
+    document.querySelector(".feature-widget"),
+  ]);
 })();

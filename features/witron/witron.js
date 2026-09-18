@@ -130,11 +130,13 @@
 
   var events = Feature.eventLog(log, EVENTS, appendLogLine);
 
-  Feature.loop(CYCLE, {
+  var loop = Feature.loop(CYCLE, {
     onReset: events.reset,
     onFrame: function (t) {
       renderScene(t);
       events.advance(t);
     },
   });
+
+  Feature.playPause(loop, [document.querySelector(".feature-widget")]);
 })();

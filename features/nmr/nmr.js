@@ -124,7 +124,7 @@
 
   reset();
 
-  Feature.loop(CYCLE, {
+  var loop = Feature.loop(CYCLE, {
     onReset: reset,
     onFrame: function (t) {
       events.advance(t);
@@ -145,4 +145,6 @@
       randNoise.style.opacity = randNoiseOpacity(t);
     },
   });
+
+  Feature.playPause(loop, [document.querySelector(".feature-widget")]);
 })();
