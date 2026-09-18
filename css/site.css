@@ -1,10 +1,9 @@
-@import url("/css/tokens.css");
-
 /*
  * Base typography for markharris.uk: aims to read like a rendered
  * markdown document rather than a "designed" site. Colours all come
- * from the custom properties in tokens.css so light/dark stay
- * consistent with any feature page that opts into the same tokens.
+ * from the custom properties in tokens.css, which every page links
+ * before this file (no @import, so the two download in parallel), and
+ * which feature pages share for consistent light/dark.
  */
 
 * {
@@ -14,8 +13,7 @@
 body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
-    Consolas, "DejaVu Sans Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: 1.6;
   max-width: 700px;
@@ -59,28 +57,40 @@ h6 {
   color: var(--color-heading-6);
 }
 
+/*
+ * The markdown markers are decorative: the second `content` declaration
+ * uses the alternative-text form (`content: "# " / ""`) so screen readers
+ * skip them. Browsers without support ignore that declaration and keep
+ * the plain one above it.
+ */
 h1::before {
   content: "# ";
+  content: "# " / "";
 }
 
 h2::before {
   content: "## ";
+  content: "## " / "";
 }
 
 h3::before {
   content: "### ";
+  content: "### " / "";
 }
 
 h4::before {
   content: "#### ";
+  content: "#### " / "";
 }
 
 h5::before {
   content: "##### ";
+  content: "##### " / "";
 }
 
 h6::before {
   content: "###### ";
+  content: "###### " / "";
 }
 
 p,
@@ -101,9 +111,18 @@ a:visited {
   color: var(--color-link-visited);
 }
 
-ul,
 ol {
   padding-left: 2em;
+}
+
+ul {
+  list-style: none;
+  padding-left: 1.5em;
+}
+
+ul > li::before {
+  content: "- ";
+  content: "- " / "";
 }
 
 blockquote {
@@ -115,8 +134,7 @@ blockquote {
 
 code,
 pre {
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
-    Consolas, "DejaVu Sans Mono", monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
 }
 
@@ -196,4 +214,24 @@ footer {
   padding-top: 1em;
   border-top: 1px solid var(--color-border);
   font-size: 0.9em;
+}
+
+/*
+ * Feature-page transcripts: the plain-text version of each animated
+ * widget. Without JS it renders as ordinary content beneath the (empty)
+ * widget; with JS (the head script adds .js to <html>) the widget takes
+ * over visually and the transcript stays in the accessibility tree only,
+ * since the widgets themselves are aria-hidden.
+ */
+.js .feature-transcript {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

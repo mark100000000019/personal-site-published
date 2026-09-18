@@ -108,22 +108,12 @@
     }
   }
 
-  function appendLogLine(text) {
-    var line = document.createElement("p");
-    line.textContent = text;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
-  }
-
-  var revealed = 0;
+  var events = Feature.eventLog(log, EVENTS);
   var seqRevealed = 0;
   var randRevealed = 0;
-  var prevCyclePos = 0;
-  var start = null;
 
   function reset() {
-    log.innerHTML = "";
-    revealed = 0;
+    events.reset();
     seqRevealed = 0;
     randRevealed = 0;
     resetCells(seqCells);
@@ -134,36 +124,25 @@
 
   reset();
 
-  function frame(timestamp) {
-    if (start === null) start = timestamp;
-    var elapsed = (timestamp - start) / 1000;
-    var cyclePos = elapsed % CYCLE;
+  Feature.loop(CYCLE, {
+    onReset: reset,
+    onFrame: function (t) {
+      events.advance(t);
 
-    if (cyclePos < prevCyclePos) reset();
-    prevCyclePos = cyclePos;
+      var seqCount = seqRevealCount(t);
+      while (seqRevealed < seqCount) {
+        paintCell(seqCells[seqRevealed], LEVELS[seqRevealed]);
+        seqRevealed++;
+      }
 
-    while (revealed < EVENTS.length && EVENTS[revealed].t <= cyclePos) {
-      appendLogLine(EVENTS[revealed].log);
-      revealed++;
-    }
+      var randCount = randRevealCount(t);
+      while (randRevealed < randCount) {
+        paintCell(randCells[INV[randRevealed]], LEVELS[randRevealed]);
+        randRevealed++;
+      }
 
-    var seqCount = seqRevealCount(cyclePos);
-    while (seqRevealed < seqCount) {
-      paintCell(seqCells[seqRevealed], LEVELS[seqRevealed]);
-      seqRevealed++;
-    }
-
-    var randCount = randRevealCount(cyclePos);
-    while (randRevealed < randCount) {
-      paintCell(randCells[INV[randRevealed]], LEVELS[randRevealed]);
-      randRevealed++;
-    }
-
-    seqGhost.style.opacity = seqGhostOpacity(cyclePos);
-    randNoise.style.opacity = randNoiseOpacity(cyclePos);
-
-    requestAnimationFrame(frame);
-  }
-
-  requestAnimationFrame(frame);
+      seqGhost.style.opacity = seqGhostOpacity(t);
+      randNoise.style.opacity = randNoiseOpacity(t);
+    },
+  });
 })();

@@ -3,10 +3,9 @@
 
   // Unlike Witron/Met Office/NMR/Ozone (a single elapsed-time clock that
   // only ever moves forward), this widget is driven by a session index
-  // that a scrubber can move in either direction. So render(index) is a
-  // pure function of that index — it rebuilds all visible state from
-  // scratch every call — rather than an append-only log that assumes
-  // monotonic playback.
+  // that a scrubber can move in either direction. Feature.scrubber owns
+  // the chart, strip, status, log, autoplay and range input; this file
+  // is the match data plus the text and scale that describe it.
   var SESSIONS = [
     { day: 1, session: "Morning", battingTeam: "home", innings: "Home 1st innings", score: "45-1 (18 ov)", momentum: 10,
       log: "Home openers settle in cautiously, one early wicket after a testing new-ball spell." },
@@ -40,83 +39,8 @@
       log: "The last wicket falls in the final over — Home win by 5 runs, as tense a finish as this format produces." },
   ];
 
-  var STEP_MS = 2200;
-  var CHART_X0 = 20;
-  var CHART_X1 = 380;
   var CHART_BASELINE_Y = 95;
   var MOMENTUM_SCALE = 1.5; // 50 momentum points -> 75px, keeps ±50 within the 20..170 box
-
-  function xAt(i) {
-    return CHART_X0 + (i / (SESSIONS.length - 1)) * (CHART_X1 - CHART_X0);
-  }
-
-  function yAt(momentum) {
-    return CHART_BASELINE_Y - momentum * MOMENTUM_SCALE;
-  }
-
-  var chart = document.getElementById("tc-chart");
-  var areaPath = document.getElementById("tc-area");
-  var linePath = document.getElementById("tc-line");
-  var revealRect = document.getElementById("tc-reveal-rect");
-  var playhead = document.getElementById("tc-playhead");
-  var dayMarkersGroup = document.getElementById("tc-day-markers");
-  var strip = document.getElementById("tc-strip");
-  var statusEl = document.getElementById("tc-status");
-  var logEl = document.getElementById("tc-log");
-  var scrubber = document.getElementById("tc-scrubber");
-  var scrubberLabel = document.getElementById("tc-scrubber-label");
-
-  if (!chart || !areaPath || !linePath || !revealRect || !playhead ||
-      !dayMarkersGroup || !strip || !statusEl || !logEl || !scrubber || !scrubberLabel) {
-    return;
-  }
-
-  // Build the momentum curve and the strip once, from the SESSIONS data
-  // itself, rather than hand-transcribing coordinates into the markup.
-  (function buildChart() {
-    var linePoints = [];
-    for (var i = 0; i < SESSIONS.length; i++) {
-      linePoints.push(xAt(i) + "," + yAt(SESSIONS[i].momentum));
-    }
-    linePath.setAttribute("d", "M" + linePoints.join(" L"));
-    areaPath.setAttribute(
-      "d",
-      "M" + xAt(0) + "," + CHART_BASELINE_Y +
-      " L" + linePoints.join(" L") +
-      " L" + xAt(SESSIONS.length - 1) + "," + CHART_BASELINE_Y + " Z"
-    );
-
-    for (var d = 0; d < SESSIONS.length; d++) {
-      if (SESSIONS[d].session !== "Morning") continue;
-      var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      g.setAttribute("class", "tc-day-marker");
-      var x = xAt(d);
-      var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      line.setAttribute("x1", x);
-      line.setAttribute("y1", 14);
-      line.setAttribute("x2", x);
-      line.setAttribute("y2", 178);
-      var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      text.setAttribute("x", x);
-      text.setAttribute("y", 190);
-      text.textContent = "D" + SESSIONS[d].day;
-      g.appendChild(line);
-      g.appendChild(text);
-      dayMarkersGroup.appendChild(g);
-    }
-  })();
-
-  var stripCells = [];
-  (function buildStrip() {
-    for (var i = 0; i < SESSIONS.length; i++) {
-      var cell = document.createElement("div");
-      cell.className = "tc-strip-cell " + SESSIONS[i].battingTeam;
-      cell.title = "Day " + SESSIONS[i].day + ", " + SESSIONS[i].session +
-        " — " + (SESSIONS[i].battingTeam === "home" ? "Home" : "Away") + " batting";
-      strip.appendChild(cell);
-      stripCells.push(cell);
-    }
-  })();
 
   function momentumPhrase(momentum) {
     if (momentum === 0) return "Even";
@@ -124,61 +48,38 @@
     return team + " ahead (" + (momentum > 0 ? "+" : "") + momentum + ")";
   }
 
-  function render(index) {
-    var s = SESSIONS[index];
-
-    scrubber.value = index;
-    scrubberLabel.textContent = "Day " + s.day + ", " + s.session;
-
-    var x = xAt(index);
-    revealRect.setAttribute("width", Math.max(0, x - CHART_X0));
-    playhead.setAttribute("x1", x);
-    playhead.setAttribute("x2", x);
-
-    for (var i = 0; i < stripCells.length; i++) {
-      stripCells[i].classList.toggle("active", i === index);
-      stripCells[i].classList.toggle("done", i < index);
-    }
-
-    statusEl.innerHTML =
-      '<p class="tc-status-line"><strong>' + s.innings + "</strong></p>" +
-      '<p class="tc-status-line">Score: <strong>' + s.score + "</strong></p>" +
-      '<p class="tc-status-line">Momentum: <strong>' + momentumPhrase(s.momentum) + "</strong></p>";
-
-    logEl.innerHTML = "";
-    for (var j = 0; j <= index; j++) {
-      var line = document.createElement("p");
-      if (j === index) line.className = "new";
-      line.textContent = "Day " + SESSIONS[j].day + ", " + SESSIONS[j].session + " — " + SESSIONS[j].log;
-      logEl.appendChild(line);
-    }
-    logEl.scrollTop = logEl.scrollHeight;
+  function sessionName(s) {
+    return "Day " + s.day + ", " + s.session;
   }
 
-  var currentIndex = 0;
-  var timer = null;
-
-  function stopAutoplay() {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
+  // One gridline per day, at its Morning session.
+  var dayMarkers = [];
+  for (var i = 0; i < SESSIONS.length; i++) {
+    if (SESSIONS[i].session === "Morning") {
+      dayMarkers.push({ index: i, label: "D" + SESSIONS[i].day });
     }
   }
 
-  function startAutoplay() {
-    stopAutoplay();
-    timer = setInterval(function () {
-      currentIndex = (currentIndex + 1) % SESSIONS.length;
-      render(currentIndex);
-    }, STEP_MS);
-  }
-
-  scrubber.addEventListener("input", function () {
-    stopAutoplay();
-    currentIndex = parseInt(scrubber.value, 10);
-    render(currentIndex);
+  Feature.scrubber({
+    prefix: "tc",
+    items: SESSIONS,
+    stepMs: 2200,
+    value: function (s) { return s.momentum; },
+    yAt: function (momentum) { return CHART_BASELINE_Y - momentum * MOMENTUM_SCALE; },
+    baselineY: CHART_BASELINE_Y,
+    markers: dayMarkers,
+    stripClass: function (s) { return "tc-strip-cell " + s.battingTeam; },
+    stripTitle: function (s) {
+      return sessionName(s) + " — " + (s.battingTeam === "home" ? "Home" : "Away") + " batting";
+    },
+    label: sessionName,
+    statusLines: function (s) {
+      return [
+        { strong: s.innings },
+        { text: "Score: ", strong: s.score },
+        { text: "Momentum: ", strong: momentumPhrase(s.momentum) },
+      ];
+    },
+    logLine: function (s) { return sessionName(s) + " — " + s.log; },
   });
-
-  render(0);
-  startAutoplay();
 })();

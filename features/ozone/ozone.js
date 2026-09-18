@@ -4,8 +4,8 @@
   // Two independent clocks, both derived from the same elapsed timer, the
   // same way Witron/Met Office/NMR derive everything from `t`: a fast loop
   // for the (seconds-timescale) catalytic cycle, a slow loop for the
-  // (decades-timescale) hole-area sweep. Different periods, same
-  // no-catch-up-logic principle.
+  // (decades-timescale) hole-area sweep. Feature.loop drives the slow
+  // cycle; the fast one is derived from the raw elapsed time it passes.
   var FAST_CYCLE = 8; // seconds per catalytic-cycle lap
   var SLOW_CYCLE = 30; // seconds per decades-chart loop
   var SWEEP_DURATION = 24; // seconds of the slow loop spent drawing
@@ -63,66 +63,49 @@
     }
   }
 
-  function appendLogLine(text) {
-    var line = document.createElement("p");
-    line.textContent = text;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
+  function markerEl(event) {
+    return event.markerId ? document.getElementById(event.markerId) : null;
   }
 
+  var events = Feature.eventLog(log, EVENTS, function (event) {
+    Feature.appendLogLine(log, event.log);
+    var el = markerEl(event);
+    if (el) el.classList.add("revealed");
+  });
+
   function resetSlow() {
-    log.innerHTML = "";
-    revealed = 0;
+    events.reset();
     for (var i = 0; i < EVENTS.length; i++) {
-      if (EVENTS[i].markerId) {
-        var el = document.getElementById(EVENTS[i].markerId);
-        if (el) el.classList.remove("revealed");
-      }
+      var el = markerEl(EVENTS[i]);
+      if (el) el.classList.remove("revealed");
     }
   }
 
-  var revealed = 0;
   var destroyedCount = 0;
-  var prevSlowPos = 0;
   var prevFastPos = 0;
-  var start = null;
 
   resetSlow();
   updateNodes(0);
 
-  function frame(timestamp) {
-    if (start === null) start = timestamp;
-    var elapsed = (timestamp - start) / 1000;
+  Feature.loop(SLOW_CYCLE, {
+    onReset: resetSlow,
+    onFrame: function (slowPos, elapsed) {
+      events.advance(slowPos);
 
-    var slowPos = elapsed % SLOW_CYCLE;
-    if (slowPos < prevSlowPos) resetSlow();
-    prevSlowPos = slowPos;
+      var x = playheadX(slowPos);
+      playhead.setAttribute("x1", x);
+      playhead.setAttribute("x2", x);
+      revealRect.setAttribute("width", x);
 
-    while (revealed < EVENTS.length && EVENTS[revealed].t <= slowPos) {
-      var event = EVENTS[revealed];
-      appendLogLine(event.log);
-      if (event.markerId) {
-        var el = document.getElementById(event.markerId);
-        if (el) el.classList.add("revealed");
+      // The fast catalytic-cycle clock: its counter deliberately never
+      // resets, reading as cumulative damage from one unchanged atom.
+      var fastPos = elapsed % FAST_CYCLE;
+      if (fastPos < prevFastPos) {
+        destroyedCount++;
+        counterEl.textContent = destroyedCount;
       }
-      revealed++;
-    }
-
-    var x = playheadX(slowPos);
-    playhead.setAttribute("x1", x);
-    playhead.setAttribute("x2", x);
-    revealRect.setAttribute("width", x);
-
-    var fastPos = elapsed % FAST_CYCLE;
-    if (fastPos < prevFastPos) {
-      destroyedCount++;
-      counterEl.textContent = destroyedCount;
-    }
-    prevFastPos = fastPos;
-    updateNodes(Math.floor(fastPos / 2) % 4);
-
-    requestAnimationFrame(frame);
-  }
-
-  requestAnimationFrame(frame);
+      prevFastPos = fastPos;
+      updateNodes(Math.floor(fastPos / 2) % 4);
+    },
+  });
 })();

@@ -111,6 +111,8 @@
     setPos(outboundLorry, outboundLorryPosition(t));
   }
 
+  // Log lines carry the flavour clock time in a <time>, so this uses a
+  // custom apply instead of Feature.eventLog's plain-text default.
   function appendLogLine(event) {
     var line = document.createElement("p");
     var time = document.createElement("time");
@@ -126,30 +128,13 @@
   inboundLorry.style.opacity = 1;
   outboundLorry.style.opacity = 1;
 
-  var revealed = 0;
-  var prevCyclePos = 0;
-  var start = null;
+  var events = Feature.eventLog(log, EVENTS, appendLogLine);
 
-  function frame(timestamp) {
-    if (start === null) start = timestamp;
-    var elapsed = (timestamp - start) / 1000;
-    var cyclePos = elapsed % CYCLE;
-
-    if (cyclePos < prevCyclePos) {
-      log.innerHTML = "";
-      revealed = 0;
-    }
-    prevCyclePos = cyclePos;
-
-    renderScene(cyclePos);
-
-    while (revealed < EVENTS.length && EVENTS[revealed].t <= cyclePos) {
-      appendLogLine(EVENTS[revealed]);
-      revealed++;
-    }
-
-    requestAnimationFrame(frame);
-  }
-
-  requestAnimationFrame(frame);
+  Feature.loop(CYCLE, {
+    onReset: events.reset,
+    onFrame: function (t) {
+      renderScene(t);
+      events.advance(t);
+    },
+  });
 })();

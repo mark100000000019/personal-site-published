@@ -128,52 +128,31 @@
     });
   }
 
-  function appendLogLine(event) {
-    var line = document.createElement("p");
-    line.textContent = event.log;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
-  }
-
-  function applyEvent(event) {
+  function applyEvent(event, index) {
     setDraft(event.draft, event.count, event.sent);
-    appendLogLine(event);
+    Feature.appendLogLine(log, event.log);
     if (event.checkId) {
       var el = document.getElementById(event.checkId);
       el.textContent = event.checkText;
       el.parentNode.classList.add(event.checkClass);
     }
+    updateNodes(index + 1);
   }
 
-  var revealed = 0;
-  var prevCyclePos = 0;
-  var start = null;
+  var events = Feature.eventLog(log, EVENTS, applyEvent);
 
   updateNodes(0);
   resetChecks();
 
-  function frame(timestamp) {
-    if (start === null) start = timestamp;
-    var elapsed = (timestamp - start) / 1000;
-    var cyclePos = elapsed % CYCLE;
-
-    if (cyclePos < prevCyclePos) {
-      log.innerHTML = "";
-      revealed = 0;
+  Feature.loop(CYCLE, {
+    onReset: function () {
+      events.reset();
       setDraft("", 0, false);
       resetChecks();
       updateNodes(0);
-    }
-    prevCyclePos = cyclePos;
-
-    while (revealed < EVENTS.length && EVENTS[revealed].t <= cyclePos) {
-      applyEvent(EVENTS[revealed]);
-      revealed++;
-      updateNodes(revealed);
-    }
-
-    requestAnimationFrame(frame);
-  }
-
-  requestAnimationFrame(frame);
+    },
+    onFrame: function (t) {
+      events.advance(t);
+    },
+  });
 })();

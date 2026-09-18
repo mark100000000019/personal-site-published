@@ -1,0 +1,215 @@
+/*
+ * Shared styling for the interactive feature pages
+ * (content/features/<name>/), linked by layouts/features/single.html
+ * before each feature's own stylesheet so a feature can override any of
+ * this by re-declaring it.
+ *
+ * Building blocks:
+ *   .feature-widget        two-column flex layout, stacks below 560px
+ *   .feature-panel         the inset-background rounded box every SVG,
+ *                          status readout and log sits in
+ *   .feature-log           scrolling monospace narration panel;
+ *                          add .feature-log--animated to fade every line
+ *                          in (append-only logs), or give individual
+ *                          lines .new (logs rebuilt from scratch)
+ *   .feature-caption       small muted paragraph under a widget
+ *   .feature-chart-* etc.  the scrubbable chart family used by Test
+ *                          cricket and Tour de France
+ */
+
+.feature-widget {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  margin: 1.5em 0 0.5em;
+}
+
+.feature-panel {
+  background: var(--color-bg-inset);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.feature-widget svg text,
+.feature-panel svg text {
+  font-family: var(--font-mono);
+  fill: var(--color-fg-muted);
+}
+
+.feature-log {
+  min-width: 0;
+  padding: 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.feature-log p {
+  margin: 0 0 0.3em;
+  color: var(--color-fg-muted);
+}
+
+.feature-log--animated p,
+.feature-log p.new {
+  opacity: 0;
+  animation: feature-log-in 0.4s ease forwards;
+}
+
+@keyframes feature-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature-caption {
+  font-size: 0.85em;
+  color: var(--color-fg-muted);
+}
+
+/* Scrubbable chart family (Test cricket, Tour de France) */
+
+.feature-chart-col {
+  flex: 1 1 58%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-chart {
+  width: 100%;
+  height: auto;
+  flex: 1 1 auto;
+}
+
+.feature-baseline {
+  stroke: var(--color-border);
+  stroke-width: 1;
+  stroke-dasharray: 3, 3;
+}
+
+.feature-baseline-label {
+  font-size: 8px;
+}
+
+.feature-marker line {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.feature-marker text {
+  font-size: 9px;
+  text-anchor: middle;
+}
+
+.feature-area {
+  fill: var(--color-accent-faint);
+  stroke: none;
+}
+
+.feature-line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.feature-playhead {
+  stroke: var(--color-link);
+  stroke-width: 1.5;
+}
+
+.feature-strip {
+  display: flex;
+  gap: 2px;
+  margin-top: 0.5em;
+}
+
+.feature-strip-cell {
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--color-border);
+  opacity: 0.4;
+  transition: opacity 0.3s ease, outline-color 0.3s ease;
+}
+
+.feature-strip-cell.done {
+  opacity: 0.55;
+}
+
+.feature-strip-cell.active {
+  opacity: 1;
+  outline: 2px solid var(--color-fg);
+  outline-offset: 1px;
+}
+
+.feature-strip-caption {
+  margin: 0.4em 0 0;
+  font-size: 0.75em;
+  color: var(--color-fg-muted);
+}
+
+.feature-info-col {
+  flex: 1 1 42%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feature-status {
+  padding: 0.6em 0.75em;
+  font-size: 0.85em;
+}
+
+.feature-status p {
+  margin: 0 0 0.25em;
+  color: var(--color-fg-muted);
+}
+
+.feature-status p:last-child {
+  margin-bottom: 0;
+}
+
+.feature-status strong {
+  color: var(--color-fg);
+}
+
+.feature-log--current p:last-child {
+  color: var(--color-fg);
+}
+
+.feature-scrubber-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 0.75em 0;
+}
+
+.feature-scrubber {
+  flex: 1 1 auto;
+  accent-color: var(--color-link);
+}
+
+.feature-scrubber-label {
+  flex: 0 0 auto;
+  min-width: 9em;
+  font-size: 0.8em;
+  color: var(--color-fg-muted);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 560px) {
+  .feature-widget {
+    flex-direction: column;
+  }
+
+  .feature-log {
+    height: 160px;
+  }
+}

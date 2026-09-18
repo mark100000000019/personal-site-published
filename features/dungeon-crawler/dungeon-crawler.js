@@ -6,12 +6,15 @@
   // redraw() rebuilds the scene from current state. Movement snaps to
   // grid cells (no tweening) and turns snap to 90 degrees.
 
+  // The corridor below the door is single-file on purpose: door (D) ->
+  // goblin (G) -> treasure (T) is the only route, so the encounter can't
+  // be walked around.
   var MAP = [
     "#######",
     "#S....#",
     "#.##.##",
-    "#.##D.#",
-    "#L##.G#",
+    "#.##D##",
+    "#L##G##",
     "#.##.T#",
     "#######",
   ];
@@ -137,6 +140,43 @@
     return tileAt(x, y);
   }
 
+  // Lever and treasure markers sit on the floor of their cell, drawn only
+  // when the cell is straight ahead (offset 0): the view has no floor
+  // quads for lateral cells, and every approach in this map is head-on.
+  function floorMarker(depth, ch) {
+    var near = boundary(depth);
+    var far = boundary(depth + 1);
+    var yMid = (near.bottom + far.bottom) / 2;
+    var hw = HALF_W[depth + 1] * 0.3;
+    var hh = (near.bottom - far.bottom) * 0.3;
+    var height = HALF_H[depth + 1] * 0.6;
+    var g;
+
+    if (ch === "L") {
+      g = el("g", { class: "dc-lever" + (state.doorOpen ? " pulled" : "") });
+      g.appendChild(el("polygon", {
+        points: pointsAttr([
+          [CX - hw, yMid + hh], [CX + hw, yMid + hh],
+          [CX + hw * 0.7, yMid - hh], [CX - hw * 0.7, yMid - hh],
+        ]),
+      }));
+      var tipX = CX + (state.doorOpen ? 1 : -1) * hw * 0.8;
+      var tipY = yMid - height;
+      g.appendChild(el("line", { x1: CX, y1: yMid, x2: tipX, y2: tipY }));
+      g.appendChild(el("circle", { cx: tipX, cy: tipY, r: Math.max(1.5, hw * 0.25) }));
+      return g;
+    }
+
+    g = el("g", { class: "dc-treasure" + (state.treasureFound ? " found" : "") });
+    var top = yMid - height;
+    g.appendChild(el("rect", {
+      x: CX - hw, y: top, width: 2 * hw, height: yMid + hh - top, rx: 1,
+    }));
+    var lidY = top + (yMid + hh - top) * 0.35;
+    g.appendChild(el("line", { x1: CX - hw, y1: lidY, x2: CX + hw, y2: lidY }));
+    return g;
+  }
+
   function redraw() {
     while (scene.firstChild) scene.removeChild(scene.firstChild);
 
@@ -163,11 +203,24 @@
           x: b.left, y: b.top, width: b.right - b.left, height: b.bottom - b.top,
           class: wallClass(frontCell),
         }));
+      } else if ((frontCell === "L" || frontCell === "T") && i + 1 < DEPTH) {
+        // Nearer front walls are drawn on later iterations, so a marker
+        // behind a wall gets covered rather than needing a visibility test.
+        scene.appendChild(floorMarker(i + 1, frontCell));
       }
     }
 
     redrawMinimap();
     hpEl.textContent = state.playerHP;
+  }
+
+  function minimapClass(ch) {
+    if (ch === "#") return "dc-mm-wall";
+    if (ch === "D") return state.doorOpen ? "dc-mm-door" : "dc-mm-wall";
+    if (ch === "G") return state.goblinDefeated ? "dc-mm-floor" : "dc-mm-monster";
+    if (ch === "L") return "dc-mm-lever";
+    if (ch === "T") return "dc-mm-treasure";
+    return "dc-mm-floor";
   }
 
   function redrawMinimap() {
@@ -186,10 +239,9 @@
     for (var y = 0; y < rows; y++) {
       for (var x = 0; x < cols; x++) {
         var ch = MAP[y].charAt(x);
-        var wall = ch === "#" || (ch === "D" && !state.doorOpen);
         minimap.appendChild(el("rect", {
           x: x0 + x * cell, y: y0 + y * cell, width: cell - 1, height: cell - 1,
-          class: wall ? "dc-mm-wall" : "dc-mm-floor",
+          class: minimapClass(ch),
         }));
       }
     }
@@ -297,7 +349,19 @@
   document.getElementById("dc-btn-right").addEventListener("click", function () { turn(1); });
   attackBtn.addEventListener("click", attack);
 
-  document.addEventListener("keydown", function (evt) {
+  // Keyboard input is scoped to the widget (it's focusable via tabindex)
+  // rather than the whole document, so arrow keys still scroll the page
+  // elsewhere and typing "w"/"d" in the wrong place doesn't move you.
+  // Clicking anywhere in the widget focuses it explicitly: Safari doesn't
+  // give focus to clicked buttons, so bubbling from a button isn't enough.
+  var widget = document.querySelector(".dc-widget");
+  if (!widget) return;
+
+  widget.addEventListener("click", function () {
+    if (!widget.contains(document.activeElement)) widget.focus();
+  });
+
+  widget.addEventListener("keydown", function (evt) {
     switch (evt.key) {
       case "ArrowUp":
       case "w":

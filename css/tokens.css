@@ -1,19 +1,26 @@
 /*
- * Shared colour tokens for markharris.uk.
+ * Shared design tokens for markharris.uk.
  *
- * Feature pages under static/features/<name>/ can link this file directly
- * to get the same light/dark palette as the rest of the site (via CSS
- * custom properties) without inheriting site.css's typography/layout
- * rules, then layer their own bespoke styling on top.
+ * Linked by every page before site.css. Feature pages under
+ * content/features/<name>/ build on the same custom properties so the
+ * light/dark palette stays consistent, then layer bespoke styling on top.
  *
  * Theme resolution order (lowest to highest precedence):
  *   1. Light values below (:root defaults)
  *   2. prefers-color-scheme: dark, if the OS/browser requests it
  *   3. [data-theme="dark"|"light"] on <html>, set by the manual toggle
  *      (see /js/theme.js) and always wins over both of the above.
+ *
+ * The semantic colours (accent, success, danger, warning, violet,
+ * neutral) exist so features don't each redeclare a light/dark pair for
+ * "a blue line" or "a red fail state"; anything genuinely bespoke (the
+ * dungeon's wall and monster colours, say) stays in that feature's CSS.
  */
 
 :root {
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, "DejaVu Sans Mono", monospace;
+
   --color-bg: #ffffff;
   --color-bg-inset: #f6f8fa;
   --color-fg: #1a1a1a;
@@ -27,6 +34,16 @@
   --color-heading-4: #1d4ed8;
   --color-heading-5: #2563eb;
   --color-heading-6: #3b82f6;
+
+  --color-accent: #2563eb;
+  --color-accent-muted: #93c5fd;
+  --color-accent-faint: #dbeafe;
+  --color-success: #1a7f37;
+  --color-danger: #dc2626;
+  --color-danger-muted: #fca5a5;
+  --color-warning: #d97706;
+  --color-violet: #7c3aed;
+  --color-neutral: #94a3b8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,6 +61,16 @@
     --color-heading-4: #3b82f6;
     --color-heading-5: #2f6fd6;
     --color-heading-6: #2563eb;
+
+    --color-accent: #58a6ff;
+    --color-accent-muted: #2f6fd6;
+    --color-accent-faint: #1c2c42;
+    --color-success: #3fb950;
+    --color-danger: #f85149;
+    --color-danger-muted: #b62324;
+    --color-warning: #e3b341;
+    --color-violet: #bc8cff;
+    --color-neutral: #8b949e;
   }
 }
 
@@ -61,4 +88,14 @@
   --color-heading-4: #3b82f6;
   --color-heading-5: #2f6fd6;
   --color-heading-6: #2563eb;
+
+  --color-accent: #58a6ff;
+  --color-accent-muted: #2f6fd6;
+  --color-accent-faint: #1c2c42;
+  --color-success: #3fb950;
+  --color-danger: #f85149;
+  --color-danger-muted: #b62324;
+  --color-warning: #e3b341;
+  --color-violet: #bc8cff;
+  --color-neutral: #8b949e;
 }
